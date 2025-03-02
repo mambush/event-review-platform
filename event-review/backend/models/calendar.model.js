@@ -1,72 +1,29 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const User = require('./user.model');
+const Event = require('./event.model');
 
-const CalendarEvent = sequelize.define('CalendarEvent', {
+const Calendar = sequelize.define('Calendar', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
   },
-  userId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    references: {
-      model: 'Users',
-      key: 'id'
-    }
-  },
-  eventId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    references: {
-      model: 'Events',
-      key: 'id'
-    }
-  },
-  reminderTime: {
-    type: DataTypes.DATE,
-    allowNull: true
-  },
-  notificationSent: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  isAttending: {
+  reminderEnabled: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
-  notes: {
-    type: DataTypes.TEXT,
-    allowNull: true
-  },
-  isSyncedWithExternalCalendar: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  externalCalendarType: {
-    type: DataTypes.ENUM('google', 'outlook', 'apple', 'other'),
-    allowNull: true
-  },
-  externalEventId: {
-    type: DataTypes.STRING,
-    allowNull: true
+  reminderTime: {
+    type: DataTypes.INTEGER, // Minutes before event
+    defaultValue: 60
   }
 }, {
-  timestamps: true,
-  indexes: [
-    {
-      fields: ['userId'],
-      name: 'calendar_user_idx'
-    },
-    {
-      fields: ['eventId'],
-      name: 'calendar_event_idx'
-    },
-    {
-      fields: ['reminderTime'],
-      name: 'calendar_reminder_idx'
-    }
-  ]
+  timestamps: true
 });
 
-module.exports = CalendarEvent;
+// Define relationships
+Calendar.belongsTo(User, { foreignKey: 'userId' });
+Calendar.belongsTo(Event, { foreignKey: 'eventId' });
+User.hasMany(Calendar, { foreignKey: 'userId' });
+
+module.exports = Calendar;

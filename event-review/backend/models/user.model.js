@@ -1,20 +1,17 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
 const bcrypt = require('bcrypt');
+const sequelize = require('../config/database');
 
 const User = sequelize.define('User', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
   },
   username: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
-    validate: {
-      len: [3, 50]
-    }
+    unique: true
   },
   email: {
     type: DataTypes.STRING,
@@ -26,34 +23,19 @@ const User = sequelize.define('User', {
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      len: [6, 100]
-    }
+    allowNull: false
   },
-  firstName: {
+  profilePic: {
     type: DataTypes.STRING,
-    allowNull: true
+    defaultValue: 'default-profile.png'
   },
-  lastName: {
-    type: DataTypes.STRING,
-    allowNull: true
+  role: {
+    type: DataTypes.ENUM('user', 'admin'),
+    defaultValue: 'user'
   },
-  profileImage: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  bio: {
-    type: DataTypes.TEXT,
-    allowNull: true
-  },
-  isAdmin: {
+  isActive: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false
-  },
-  lastLogin: {
-    type: DataTypes.DATE,
-    allowNull: true
+    defaultValue: true
   }
 }, {
   timestamps: true,
@@ -73,9 +55,9 @@ const User = sequelize.define('User', {
   }
 });
 
-// Instance method to check password
-User.prototype.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+// Method to check password validity
+User.prototype.isValidPassword = async function(password) {
+  return await bcrypt.compare(password, this.password);
 };
 
 module.exports = User;
