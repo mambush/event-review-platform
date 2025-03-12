@@ -1,13 +1,11 @@
-import api from './api';
+import axios from 'axios';
 
-export const getTrendingEvents = async () => {
-    try {
-      // Implementation details - perhaps fetching trending events from your API
-      const response = await fetch('/api/events/trending');
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching trending events:', error);
-      throw error;
-    }
-  };
+export const getUpcomingEvents = async () => {
+  try {
+    const response = await axios.get('/api/events');
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch events:', error);
+    throw error;
+  }
+};

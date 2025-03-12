@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./user.model');
-const Event = require('./event.model');
+const User = require('./User');
+const Event = require('./Event');
 
 const Calendar = sequelize.define('Calendar', {
   id: {
