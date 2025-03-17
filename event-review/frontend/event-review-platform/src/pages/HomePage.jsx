@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getUpcomingEvents } from '../services/eventService';
+import { getUpcomingEvents } from '/src/services/eventService.js';
 
 const HomePage = () => {
   const [events, setEvents] = useState([]);

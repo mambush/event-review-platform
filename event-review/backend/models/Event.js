@@ -1,6 +1,6 @@
+// models/Event.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./User');
 
 const Event = sequelize.define('Event', {
   id: {
@@ -28,19 +28,20 @@ const Event = sequelize.define('Event', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  organizer_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
   image: {
-    type: DataTypes.STRING,
-    defaultValue: 'default-event.png'
+    type: DataTypes.STRING
   },
   status: {
-    type: DataTypes.ENUM('upcoming', 'ongoing', 'completed', 'cancelled'),
-    defaultValue: 'upcoming'
+    type: DataTypes.ENUM('active', 'cancelled', 'completed'),
+    defaultValue: 'active'
   }
 }, {
+  tableName: 'events',
   timestamps: true
 });
-
-// Define relationships
-Event.belongsTo(User, { as: 'organizer', foreignKey: 'organizerId' });
 
 module.exports = Event;
